@@ -1,7 +1,12 @@
 package com.example.weather_app.model;
 
+import lombok.Getter;
+
+@Getter
 public class Forecast {
 
+ private double temperature;
+ private double windSpeed;
 
 
     /*
