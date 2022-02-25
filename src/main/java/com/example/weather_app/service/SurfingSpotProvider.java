@@ -46,7 +46,7 @@ public class SurfingSpotProvider implements SpotProvider {
 
     //range temperature and wind - inclusive / exclusive?
     private static boolean isForecastGoodForSurfing(Forecast forecast) {
-        boolean tempOk = forecast.getTemperature() >= MIN_WIND_SPEED && forecast.getTemperature() <= MAX_WIND_SPEED;
+        boolean tempOk = forecast.getWindSpeed() >= MIN_WIND_SPEED && forecast.getWindSpeed() <= MAX_WIND_SPEED;
         boolean windSpeedOk = forecast.getTemperature() >= MIN_TEMPERATURE && forecast.getTemperature() <= MAX_TEMPERATURE;
         return tempOk && windSpeedOk;
     }

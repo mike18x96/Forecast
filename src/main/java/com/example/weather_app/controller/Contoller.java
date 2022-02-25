@@ -17,7 +17,7 @@ public class Contoller {
 
     @GetMapping("forecast")
     public SurfingSpot getSurfingSpot(@RequestParam(value = "date") Date date) {
-        return spotProvider.findBestSpot(date);
+        return spotProvider.findBestSpot(date).orElseThrow(() -> new IllegalArgumentException("There is no spot"));
     }
 
 }
