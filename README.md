@@ -14,7 +14,6 @@ Le Morne (Mauritius)
 
 depending on which place offers better windsurfing conditions on that day in the 16 forecast day range. Apart from returning the name of the location, the response should also include weather conditions (at least average temperature - Celcius, wind speed - m/s) for the location on that day.
 
-
 3. The list of windsurfing locations (including geographical coordinates) should be embedded in the application in a way that allows for extensions at a later stage. Note: There is no API requirement for creating or editing the locations.
 
 4. The best location selection criteria are:
