@@ -6,50 +6,67 @@ import com.example.weather_app.model.SurfingSpot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class SurfingSpotProvider implements SpotProvider {
 
     private final ForecastProvider forecastProvider;
-    private static final double MIN_WIND_SPEED = 5;
-    private static final double MAX_WIND_SPEED = 18;
-    private static final double MIN_TEMPERATURE = 5;
-    private static final double MAX_TEMPERATURE = 35;
-
 
     @Override
     public Optional<SurfingSpot> findBestSpot(Date date) {
+
+        validate(date);
+
         return getFilteredForecastsBy(date)
                 .map(bestForecast -> new SurfingSpot(bestForecast.getLocation(),
                         bestForecast.getTemperature(), bestForecast.getWindSpeed()));
     }
 
+    private void validate(Date date) {
+        // validate the date: nie może być większa niz 16 dni i mniejsza niż data teraźniejsza
+        // wyrzucić wyjątek że zły parametr i zmapować go w handlerze wyjątków na kod 422
+
+    }
+
     private Optional<Forecast> getFilteredForecastsBy(Date date) {
-        return Arrays.stream(Location.values())
+        return Stream.of(Location.values())
                 .map(location -> forecastProvider.getForecast(location, date))
-                .filter(SurfingSpotProvider::isForecastGoodForSurfing)
-                .max(SurfingSpotProvider::weatherConditionFormula);
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(WeatherConditionAnalyzer::isForecastGoodForSurfing)
+                .max(new WeatherConditionComparator());
     }
 
-    private static int weatherConditionFormula(Forecast forecastA, Forecast forecastB) {
-        return Double.compare(calculateWeatherConditionFormula(forecastA), calculateWeatherConditionFormula(forecastB));
+
+    private static class WeatherConditionAnalyzer {
+        private static final double MIN_WIND_SPEED = 5;
+        private static final double MAX_WIND_SPEED = 18;
+        private static final double MIN_TEMPERATURE = 5;
+        private static final double MAX_TEMPERATURE = 35;
+
+        //range temperature and wind - inclusive / exclusive?
+        private static boolean isForecastGoodForSurfing(Forecast forecast) {
+            boolean tempOk = forecast.getWindSpeed() >= MIN_WIND_SPEED && forecast.getWindSpeed() <= MAX_WIND_SPEED;
+            boolean windSpeedOk = forecast.getTemperature() >= MIN_TEMPERATURE && forecast.getTemperature() <= MAX_TEMPERATURE;
+            return tempOk && windSpeedOk;
+        }
     }
 
-    private static double calculateWeatherConditionFormula(Forecast forecast) {
-        return (forecast.getWindSpeed() * 3) + forecast.getTemperature();
+
+    private static class WeatherConditionComparator implements Comparator<Forecast> {
+        @Override
+        public int compare(Forecast forecastA, Forecast forecastB) {
+            return Double.compare(calculateWeatherConditionFormula(forecastA), calculateWeatherConditionFormula(forecastB));
+        }
+
+        private double calculateWeatherConditionFormula(Forecast forecast) {
+            return (forecast.getWindSpeed() * 3) + forecast.getTemperature();
+        }
     }
 
-    //range temperature and wind - inclusive / exclusive?
-    private static boolean isForecastGoodForSurfing(Forecast forecast) {
-        boolean tempOk = forecast.getWindSpeed() >= MIN_WIND_SPEED && forecast.getWindSpeed() <= MAX_WIND_SPEED;
-        boolean windSpeedOk = forecast.getTemperature() >= MIN_TEMPERATURE && forecast.getTemperature() <= MAX_TEMPERATURE;
-        return tempOk && windSpeedOk;
-    }
 }
 /*
     if wind speed IN range <5; 35> m/s \

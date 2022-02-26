@@ -1,16 +1,15 @@
 package com.example.weather_app.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Getter
-@Setter
 public class Forecast {
 
-    private double temperature;
-    private double windSpeed;
     private Location location;
+    private double windSpeed;
+    private double temperature;
 
 
     /*
