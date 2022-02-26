@@ -1,7 +1,16 @@
 package com.example.weather_app.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
+
+@Getter
+@Setter
 public class Forecast {
 
+    private double temperature;
+    private double windSpeed;
+    private Location location;
 
 
     /*
