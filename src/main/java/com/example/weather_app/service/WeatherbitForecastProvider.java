@@ -18,11 +18,11 @@ import java.util.Optional;
 @Setter
 public class WeatherbitForecastProvider implements ForecastProvider {
 
-    @Value("${WEATHERBIT_URL}")
-    private String WEATHERBIT_URL;
+    @Value("${weatherBitUrl}")
+    private String weatherBitUrl;
 
-    @Value("${API_KEY}")
-    private String API_KEY;
+    @Value("${apiKey}")
+    private String apiKey;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -35,12 +35,12 @@ public class WeatherbitForecastProvider implements ForecastProvider {
 
     }
 
-    public Forecast getForecast(Location location, long day) {
+    private Forecast getForecast(Location location, long day) {
+        String url = getUrl();
         double lat = location.getLatitude();
         double lon = location.getLongitude();
-        String url = getUrl();
 
-        WeatherbitDto weatherbitDto = restTemplate.getForObject(url, WeatherbitDto.class, lat, lon, day, API_KEY);
+        WeatherbitDto weatherbitDto = restTemplate.getForObject(url, WeatherbitDto.class, lat, lon, day, apiKey);
 
         return Forecast.builder()
                 .temperature(weatherbitDto.getData().get(0).getTemp())
@@ -51,7 +51,7 @@ public class WeatherbitForecastProvider implements ForecastProvider {
 
     private String getUrl() {
         String queryParams = "daily?lat={lat}&lon={lon}&days={day}&key={apiKey}";
-        return WEATHERBIT_URL + queryParams;
+        return weatherBitUrl + queryParams;
     }
 
 }

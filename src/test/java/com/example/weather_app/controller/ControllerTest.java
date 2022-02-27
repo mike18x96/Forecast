@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,40 +21,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ControllerTest {
 
-    private static final String URL = "/forecast";
-
-
     @Autowired
     private MockMvc mockMvc;
+
+    private final String url = "/forecast";
 
     @Test
     void getSurfingSpot_goodDate_returnsBestSpotOrNothing() throws Exception {
         //given
-        String DATE = "?date=2022-03-05";
+        String date = "2022-03-05";
         //when
-        mockMvc.perform(get(URL + DATE))
+        mockMvc.perform(get(url)
+                        .param("date", date))
                 .andDo(print())
-                //then
                 .andExpect(status().isOk());
     }
 
     @ParameterizedTest
-    @MethodSource("badDate")
+    @ValueSource(strings = {"02-27-2022", "2022-13-27", "2020-01-12", "2022.12.27"})
     void getSurfingSpot_badDate_throwsExceptionAndReturns422(String date) throws Exception {
-        //given
 
-        //when
-        mockMvc.perform(get(URL + date))
+        mockMvc.perform(get(url)
+                        .param("date", date))
                 .andDo(print())
-                //then
                 .andExpect(status().isUnprocessableEntity());
     }
 
-    public static Stream<Arguments> badDate() {
-        return Stream.of(
-                Arguments.of("?date=2022-02-27"),
-                Arguments.of("?date=2022-13-27"),
-                Arguments.of("?date=2022-02-33"));
-    }
 
 }

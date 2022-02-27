@@ -3,6 +3,7 @@ package com.example.weather_app.service;
 import com.example.weather_app.model.Forecast;
 import com.example.weather_app.model.Location;
 import com.example.weather_app.model.SurfingSpot;
+import com.example.weather_app.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,12 @@ public class SurfingSpotProvider implements SpotProvider {
     }
 
     private void validate(LocalDate date) {
-        // validate the date: nie może być większa niz 16 dni i mniejsza niż data teraźniejsza
-        // wyrzucić wyjątek że zły parametr i zmapować go w handlerze wyjątków na kod 422
+        long period = DateUtils.dateDifferenceFromNowInDays(date);
+        if (period < 0) {
+
+        } else if (period > 16) {
+
+        }
 
     }
 
@@ -70,13 +75,10 @@ public class SurfingSpotProvider implements SpotProvider {
 
 }
 /*
-    if wind speed IN range <5; 35> m/s \
+    if wind speed IN range <5; 18> m/s \
                                          Location OK -> add to forecastList
     if temperature IN range <5; 35>m/s /
 
-
-
-         sprawdzić pogodę dla wszyskich lokalizacji, dodać je do listy i wybrać z niej najlepszą wg wytycznych:
 
     The best location selection criteria are:
     If the wind speed is not within <5; 18> (m/s) and the temperature is not in the range <5; 35> (°C),

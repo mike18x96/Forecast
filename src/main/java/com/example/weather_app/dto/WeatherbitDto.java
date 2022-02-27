@@ -7,6 +7,6 @@ import java.util.ArrayList;
 @Getter
 public class WeatherbitDto {
 
-    private ArrayList<WeatherbitDataDto> data;
+    private ArrayList<WeatherDataDto> data;
     private String city_name;
 }

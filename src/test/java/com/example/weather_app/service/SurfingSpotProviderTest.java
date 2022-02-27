@@ -63,7 +63,7 @@ class SurfingSpotProviderTest {
                 ),
                 Arguments.of(
                         List.of(
-                                new Forecast(JASTARNIA, 7, -23),
+                                new Forecast(JASTARNIA, 7, -3),
                                 new Forecast(BRIDGETOWN, 18, 39),
                                 new Forecast(FORTALEZA, 13, 45),
                                 new Forecast(PISSOURI, 10, 4),
