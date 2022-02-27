@@ -6,7 +6,9 @@ import com.example.weather_app.model.SurfingSpot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -16,7 +18,7 @@ public class SurfingSpotProvider implements SpotProvider {
     private final ForecastProvider forecastProvider;
 
     @Override
-    public Optional<SurfingSpot> findBestSpot(Date date) {
+    public Optional<SurfingSpot> findBestSpot(LocalDate date) {
 
         validate(date);
 
@@ -25,13 +27,13 @@ public class SurfingSpotProvider implements SpotProvider {
                         bestForecast.getTemperature(), bestForecast.getWindSpeed()));
     }
 
-    private void validate(Date date) {
+    private void validate(LocalDate date) {
         // validate the date: nie może być większa niz 16 dni i mniejsza niż data teraźniejsza
         // wyrzucić wyjątek że zły parametr i zmapować go w handlerze wyjątków na kod 422
 
     }
 
-    private Optional<Forecast> getFilteredForecastsBy(Date date) {
+    private Optional<Forecast> getFilteredForecastsBy(LocalDate date) {
         return Stream.of(Location.values())
                 .map(location -> forecastProvider.getForecast(location, date))
                 .filter(Optional::isPresent)
@@ -39,7 +41,6 @@ public class SurfingSpotProvider implements SpotProvider {
                 .filter(WeatherConditionAnalyzer::isForecastGoodForSurfing)
                 .max(new WeatherConditionComparator());
     }
-
 
     private static class WeatherConditionAnalyzer {
         private static final double MIN_WIND_SPEED = 5;

@@ -8,8 +8,8 @@ import java.util.Date;
 @Service
 public class ForecastService {
 
-
     public SurfingSpot findSpot(Date date) {
+
         return new SurfingSpot(null, 0, 0);
     }
 }

@@ -2,7 +2,7 @@
 
 Build a “Worldwide Windsurfer’s Weather Service” application meeting the requirements listed below.
 
-1.Use the Weatherbit Forecast API(https://www.weatherbit.io/api/weather-forecast-16-day) as the weather data source.
+1. Use the Weatherbit Forecast API(https://www.weatherbit.io/api/weather-forecast-16-day) as the weather data source.
 
 2. Expose a REST API, where the argument is a day (yyyy-mm-dd date format) and return value is one of following locations:
 
