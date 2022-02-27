@@ -2,24 +2,25 @@ package com.example.weather_app.service;
 
 import com.example.weather_app.model.Forecast;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.example.weather_app.model.Location.JASTARNIA;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest
 class WeatherbitForecastProviderTest {
 
+    @Autowired
+    private WeatherbitForecastProvider weatherbitForecastProvider;
 
     @Test
-    void getForecast_goodDateAndLocation_ReturnsForecast() throws ParseException {
+    void getForecast_goodDateAndLocation_ReturnsForecast() {
         //given
-        LocalDate date = LocalDate.of(2022, 3, 1);
-        WeatherbitForecastProvider weatherbitForecastProvider = new WeatherbitForecastProvider();
-        weatherbitForecastProvider.setWEATHERBIT_URL("http://api.weatherbit.io/v2.0/forecast/");
-        weatherbitForecastProvider.setAPI_KEY("56c3df3771794dfab56b72bdd23e7772");
+        LocalDate date = LocalDate.of(2022, 2, 28);
 
         //when
         Optional<Forecast> forecast = weatherbitForecastProvider.getForecast(JASTARNIA, date);
@@ -30,5 +31,4 @@ class WeatherbitForecastProviderTest {
         assertThat(forecast.get().getTemperature()).isNotNull();
         assertThat(forecast.get().getWindSpeed()).isNotNull();
     }
-
 }

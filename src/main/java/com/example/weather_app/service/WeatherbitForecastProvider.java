@@ -18,10 +18,10 @@ import java.util.Optional;
 @Setter
 public class WeatherbitForecastProvider implements ForecastProvider {
 
-    @Value("${WEATHERBIT_URL:http://api.weatherbit.io/v2.0/forecast/}")
+    @Value("${WEATHERBIT_URL}")
     private String WEATHERBIT_URL;
 
-    @Value("${API_KEY:56c3df3771794dfab56b72bdd23e7772}")
+    @Value("${API_KEY}")
     private String API_KEY;
 
     private final RestTemplate restTemplate = new RestTemplate();

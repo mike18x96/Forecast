@@ -76,6 +76,14 @@ class SurfingSpotProviderTest {
                                 new Forecast(FORTALEZA, 50, 45),
                                 new Forecast(PISSOURI, 19, 4),
                                 new Forecast(LE_MORNE, 0, 36))
+                ),
+                Arguments.of(
+                        List.of(
+                                new Forecast(JASTARNIA, 18.1, 15),
+                                new Forecast(BRIDGETOWN, 4.9, 20),
+                                new Forecast(FORTALEZA, 14, 35.1),
+                                new Forecast(PISSOURI, 13, 4.9),
+                                new Forecast(LE_MORNE, 0, 0))
                 )
         );
     }
@@ -105,7 +113,7 @@ class SurfingSpotProviderTest {
                                 new Forecast(FORTALEZA, 17, 12),
                                 new Forecast(PISSOURI, 13, 17),
                                 new Forecast(LE_MORNE, 18, 5)),
-                        new SurfingSpot(BRIDGETOWN, 18, 15)
+                        new SurfingSpot(BRIDGETOWN, 15, 18)
                 ),
                 Arguments.of(
                         List.of(
@@ -114,63 +122,26 @@ class SurfingSpotProviderTest {
                                 new Forecast(FORTALEZA, 13, 3),
                                 new Forecast(PISSOURI, 10, 20),
                                 new Forecast(LE_MORNE, 18, 15)),
-                        new SurfingSpot(LE_MORNE, 18, 15)
+                        new SurfingSpot(LE_MORNE, 15, 18)
+                ),
+                Arguments.of(
+                        List.of(
+                                new Forecast(JASTARNIA, 18, 35),
+                                new Forecast(BRIDGETOWN, 18, 6),
+                                new Forecast(FORTALEZA, 13, 3),
+                                new Forecast(PISSOURI, 10, 20),
+                                new Forecast(LE_MORNE, 18, 15)),
+                        new SurfingSpot(JASTARNIA, 35, 18)
+                ),
+                Arguments.of(
+                        List.of(
+                                new Forecast(JASTARNIA, 4.9, 4.9),
+                                new Forecast(BRIDGETOWN, 4.9, 30),
+                                new Forecast(FORTALEZA, 5, 5),
+                                new Forecast(PISSOURI, 4.9, 20),
+                                new Forecast(LE_MORNE, 17, 4.9)),
+                        new SurfingSpot(FORTALEZA, 5, 5)
                 )
         );
     }
-
-
-    @ParameterizedTest
-    @MethodSource("goodConditionsData")
-    void findBestSpot_goodDateAndConditions_ReturnsBestSurfingSpot(double temperatureJastarnia, double windSpeedJastarnia, double temperatureForRest, double windSpeedForRest) {
-        //given
-        LocalDate date = LocalDate.of(2022,2,25);
-
-        Forecast forecastJastarnia = new Forecast(JASTARNIA, temperatureJastarnia, windSpeedJastarnia);
-        Forecast forecastForRest = new Forecast(LE_MORNE, temperatureForRest, windSpeedForRest);
-        when(forecastProvider.getForecast(JASTARNIA, date)).thenReturn(Optional.of(forecastJastarnia));
-        when(forecastProvider.getForecast(LE_MORNE, date)).thenReturn(Optional.of(forecastForRest));
-
-        //when
-        Optional<SurfingSpot> bestSpot = surfingSpotProvider.findBestSpot(date);
-
-        //then
-        assertThat(bestSpot).isEmpty();
-        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(LocalDate.class));
-        verifyNoMoreInteractions(forecastProvider);
-    }
-
-    private static Stream<Arguments> goodConditionsData() {
-        return Stream.of(
-                of(35, 18.0, 5, 5.0),
-                of(5, 5.0, 4, 4.9));
-    }
-
-    @ParameterizedTest
-    @MethodSource("badConditionsData")
-    void findBestSpot_goodDateBadConditions_ReturnsEmpty(double temperatureJastarnia, double windSpeedJastarnia, double temperatureForRest, double windSpeedForRest) {
-        //given
-        LocalDate date = LocalDate.of(2022,2,25);
-
-        Forecast forecastJastarnia = new Forecast(JASTARNIA, temperatureJastarnia, windSpeedJastarnia);
-        Forecast forecastForRest = new Forecast(LE_MORNE, temperatureForRest, windSpeedForRest);
-        when(forecastProvider.getForecast(JASTARNIA, date)).thenReturn(Optional.of(forecastJastarnia));
-        when(forecastProvider.getForecast(LE_MORNE, date)).thenReturn(Optional.of(forecastForRest));
-
-        //when
-        Optional<SurfingSpot> bestSpot = surfingSpotProvider.findBestSpot(date);
-
-        //then
-        assertThat(bestSpot).isEmpty();
-        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(LocalDate.class));
-        verifyNoMoreInteractions(forecastProvider);
-    }
-
-    private static Stream<Arguments> badConditionsData() {
-        return Stream.of(
-                of(36, 8.4, 5, 4, 5.9),
-                of(25, 18.1, 5, 16, 4.9));
-
-    }
-
 }
