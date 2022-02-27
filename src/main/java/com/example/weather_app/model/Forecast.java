@@ -10,7 +10,7 @@ import lombok.Getter;
 public class Forecast {
 
     private Location location;
-    private float windSpeed;
-    private float temperature;
+    private double windSpeed;
+    private double temperature;
 
 }

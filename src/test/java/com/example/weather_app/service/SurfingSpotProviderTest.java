@@ -3,8 +3,6 @@ package com.example.weather_app.service;
 import com.example.weather_app.model.Forecast;
 import com.example.weather_app.model.Location;
 import com.example.weather_app.model.SurfingSpot;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,17 +13,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static com.example.weather_app.model.Location.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,7 +40,7 @@ class SurfingSpotProviderTest {
     @MethodSource("provideLocationsWithNoGoodWeatherConditions")
     void findBestSpot_noneWeatherConditionInRightRange_returnsEmptyOptional(List<Forecast> forecastList) {
         //given
-        Date date = new Date();
+        LocalDate date = LocalDate.now();
         forecastList.forEach(forecast -> when(forecastProvider.getForecast(eq(forecast.getLocation()), eq(date)))
                 .thenReturn(Optional.of(forecast)));
 
@@ -90,7 +84,7 @@ class SurfingSpotProviderTest {
     @MethodSource("forecastWithConditionInRightRangeAndExpectedSpot")
     void findBestSpot_weatherConditionInRightRange_returnsBestSurfingSpot(List<Forecast> forecastList, SurfingSpot expectedSurfingSpot) {
         //given
-        Date date = new Date();
+        LocalDate date = LocalDate.now();
         forecastList.forEach(forecast -> when(forecastProvider.getForecast(eq(forecast.getLocation()), eq(date)))
                 .thenReturn(Optional.of(forecast)));
 
@@ -130,7 +124,7 @@ class SurfingSpotProviderTest {
     @MethodSource("goodConditionsData")
     void findBestSpot_goodDateAndConditions_ReturnsBestSurfingSpot(double temperatureJastarnia, double windSpeedJastarnia, double temperatureForRest, double windSpeedForRest) {
         //given
-        Date date = getDate("2022-02-25");
+        LocalDate date = LocalDate.of(2022,2,25);
 
         Forecast forecastJastarnia = new Forecast(JASTARNIA, temperatureJastarnia, windSpeedJastarnia);
         Forecast forecastForRest = new Forecast(LE_MORNE, temperatureForRest, windSpeedForRest);
@@ -142,7 +136,7 @@ class SurfingSpotProviderTest {
 
         //then
         assertThat(bestSpot).isEmpty();
-        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(Date.class));
+        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(LocalDate.class));
         verifyNoMoreInteractions(forecastProvider);
     }
 
@@ -156,7 +150,7 @@ class SurfingSpotProviderTest {
     @MethodSource("badConditionsData")
     void findBestSpot_goodDateBadConditions_ReturnsEmpty(double temperatureJastarnia, double windSpeedJastarnia, double temperatureForRest, double windSpeedForRest) {
         //given
-        Date date = getDate("2022-02-25");
+        LocalDate date = LocalDate.of(2022,2,25);
 
         Forecast forecastJastarnia = new Forecast(JASTARNIA, temperatureJastarnia, windSpeedJastarnia);
         Forecast forecastForRest = new Forecast(LE_MORNE, temperatureForRest, windSpeedForRest);
@@ -168,14 +162,8 @@ class SurfingSpotProviderTest {
 
         //then
         assertThat(bestSpot).isEmpty();
-        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(Date.class));
+        verify(forecastProvider, times(5)).getForecast(any(Location.class), any(LocalDate.class));
         verifyNoMoreInteractions(forecastProvider);
-    }
-
-    @SneakyThrows
-    private Date getDate(String stringDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.parse(stringDate);
     }
 
     private static Stream<Arguments> badConditionsData() {
@@ -185,16 +173,4 @@ class SurfingSpotProviderTest {
 
     }
 
-    @Test
-    void findBestSpot_badDate_DoesNotReturnAny() throws ParseException, DateTimeException {
-        //given
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = format.format(new Date());
-        Date date = format.parse("2025-13-35");
-        assertThatThrownBy(() -> surfingSpotProvider.findBestSpot(date))
-                //then
-                .isInstanceOf(DateTimeException.class)
-                .hasMessageContaining("Incorrect date!");
-        verify(forecastProvider, never()).getForecast(any(Location.class), any(Date.class));
-    }
 }
