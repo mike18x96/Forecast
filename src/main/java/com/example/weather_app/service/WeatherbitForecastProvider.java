@@ -40,11 +40,11 @@ public class WeatherbitForecastProvider implements ForecastProvider {
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
-        WeatherbitDto weatherbitDto = restTemplate.getForObject(url, WeatherbitDto.class, lat, lon, day, apiKey);
+        WeatherbitDto weatherbitDto = restTemplate.getForObject(url, WeatherbitDto.class, lat, lon, day + 1, apiKey);
 
         return Forecast.builder()
-                .temperature(weatherbitDto.getData().get(0).getTemp())
-                .windSpeed(weatherbitDto.getData().get(0).getWind_spd())
+                .temperature(weatherbitDto.getData().get((int) day).getTemp())
+                .windSpeed(weatherbitDto.getData().get((int) day).getWind_spd())
                 .location(location)
                 .build();
     }
