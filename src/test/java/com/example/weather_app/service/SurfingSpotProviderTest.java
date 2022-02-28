@@ -1,7 +1,6 @@
 package com.example.weather_app.service;
 
 import com.example.weather_app.model.Forecast;
-import com.example.weather_app.model.Location;
 import com.example.weather_app.model.SurfingSpot;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,9 +20,8 @@ import java.util.stream.Stream;
 import static com.example.weather_app.model.Location.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.provider.Arguments.of;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

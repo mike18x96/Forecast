@@ -9,4 +9,5 @@ public class WeatherbitDto {
 
     private ArrayList<WeatherDataDto> data;
     private String city_name;
+//    private String timezone;
 }

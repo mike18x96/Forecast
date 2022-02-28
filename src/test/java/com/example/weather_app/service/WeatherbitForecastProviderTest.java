@@ -31,4 +31,14 @@ class WeatherbitForecastProviderTest {
         assertThat(forecast.get().getTemperature()).isNotNull();
         assertThat(forecast.get().getWindSpeed()).isNotNull();
     }
+
+
+//    @Test
+//    void test(){
+//
+//        SurfingSpotProvider surfingSpotProvider = new SurfingSpotProvider();
+////        new SurfingSpotProvider().findBestSpot(2022-03-01);
+//
+//
+//    }
 }

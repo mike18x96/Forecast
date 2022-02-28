@@ -26,7 +26,6 @@ public class WeatherbitForecastProvider implements ForecastProvider {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-
     @Override
     public Optional<Forecast> getForecast(Location location, LocalDate date) {
 

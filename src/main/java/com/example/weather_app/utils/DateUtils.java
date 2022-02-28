@@ -1,15 +1,10 @@
 package com.example.weather_app.utils;
 
 import com.example.weather_app.exception.DateFormatException;
-import lombok.SneakyThrows;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class DateUtils {
 
