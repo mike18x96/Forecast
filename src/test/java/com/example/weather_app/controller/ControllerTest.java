@@ -33,7 +33,6 @@ class ControllerTest {
         //when
         mockMvc.perform(get(url)
                         .param("date", date))
-                .andDo(print())
                 .andExpect(status().isOk());
     }
 
@@ -43,7 +42,6 @@ class ControllerTest {
 
         mockMvc.perform(get(url)
                         .param("date", date))
-                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 

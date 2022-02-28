@@ -7,7 +7,9 @@ import com.example.weather_app.model.SurfingSpot;
 import com.example.weather_app.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -27,14 +29,13 @@ public class SurfingSpotProvider implements SpotProvider {
         validate(date);
 
         return getFilteredForecastsBy(date)
-                .map(bestForecast -> new SurfingSpot(bestForecast.getLocation(),
-                        bestForecast.getTemperature(), bestForecast.getWindSpeed()));
+                .map(SurfingSpot::new);
     }
 
     private void validate(LocalDate date) {
         long period = DateUtils.dateDifferenceFromNowInDays(date);
         if (period < 0 || period > 16) {
-            throw new ResourceNotFoundException("Date cannot after 16 days from today (" + date + ")");
+            throw new ResponseStatusException( HttpStatus.UNPROCESSABLE_ENTITY, "Date cannot be in past and later than 16 days from now");
         }
     }
 

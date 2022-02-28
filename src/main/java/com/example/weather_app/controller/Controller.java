@@ -20,7 +20,7 @@ public class Controller {
     @GetMapping("forecast")
     public SurfingSpot getSurfingSpot(@RequestParam(value = "date") String stringDate) {
 
-        LocalDate date = DateUtils.getValidDate(stringDate);
+        LocalDate date = DateUtils.parseToLocalDate(stringDate);
 
         return spotProvider.findBestSpot(date)
                 .orElseThrow(() -> new ResourceNotFoundException("No suitable spots at given date"));

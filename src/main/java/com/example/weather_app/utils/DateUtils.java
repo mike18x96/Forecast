@@ -8,16 +8,12 @@ import java.time.temporal.ChronoUnit;
 
 public class DateUtils {
 
-    public static LocalDate getValidDate(String stringDate) {
+    public static LocalDate parseToLocalDate(String stringDate) {
         try {
             return LocalDate.parse(stringDate);
         } catch (DateTimeParseException ex) {
             throw new DateFormatException(ex.getMessage());
         }
-    }
-
-    public static void validateDate(LocalDate date) {
-
     }
 
     public static long dateDifferenceFromNowInDays(LocalDate date) {
