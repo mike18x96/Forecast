@@ -1,5 +1,6 @@
 package com.example.weather_app.service;
 
+import com.example.weather_app.exception.ResourceNotFoundException;
 import com.example.weather_app.model.Forecast;
 import com.example.weather_app.model.Location;
 import com.example.weather_app.model.SurfingSpot;
@@ -30,12 +31,9 @@ public class SurfingSpotProvider implements SpotProvider {
 
     private void validate(LocalDate date) {
         long period = DateUtils.dateDifferenceFromNowInDays(date);
-        if (period < 0) {
-
-        } else if (period > 16) {
-
+        if (period < 0 || period > 16) {
+            throw new ResourceNotFoundException("Date cannot after 16 days from today (" + date + ")");
         }
-
     }
 
     private Optional<Forecast> getFilteredForecastsBy(LocalDate date) {
@@ -74,19 +72,3 @@ public class SurfingSpotProvider implements SpotProvider {
     }
 
 }
-/*
-    if wind speed IN range <5; 18> m/s \
-                                         Location OK -> add to forecastList
-    if temperature IN range <5; 35>m/s /
-
-
-    The best location selection criteria are:
-    If the wind speed is not within <5; 18> (m/s) and the temperature is not in the range <5; 35> (°C),
-    the location is not suitable for windsurfing. However, if they are in these ranges,
-
-    then the best location is determined by the highest value calculated from the following formula:
-    v * 3 + temp
-    where v is the wind speed in m/s on a given day, and temp is an average forecasted temperature for a given day in Celsius,
-    respectively - you can obtain these parameters from the “data” key in Weatherbit API’s response.
-    If none of the locations meets the above criteria, the application does not return any.
-        */
